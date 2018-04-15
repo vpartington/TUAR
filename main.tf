@@ -7,6 +7,10 @@ variable "webserver_port" {
   default = 8282
 }
 
+output "webserver_elb_dns_name" {
+  value = "${aws_elb.webserver_elb.dns_name}"
+}
+
 resource "aws_security_group" "webserver_security_group" {
   name = "webserver_security_group created by vpartington with terraform"
 
@@ -54,10 +58,54 @@ resource "aws_autoscaling_group" "webserver_group" {
   availability_zones = ["${data.aws_availability_zones.all.names}"]
   min_size = 2
   max_size = 10
+  load_balancers = ["${aws_elb.webserver_elb.name}"]
+  health_check_type = "ELB"
 
   tag {
     key = "Name"
     value = "webserver_instance created by vpartington with terraform"
     propagate_at_launch = true
+  }
+}
+
+resource "aws_security_group" "webserver_elb_security_group" {
+  name = "webserver_elb_security_group created by vpartington with terraform"
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+}
+
+resource "aws_elb" "webserver_elb" {
+  name = "webserverelbbyvpartington"
+
+  availability_zones = ["${data.aws_availability_zones.all.names}"]
+  security_groups = ["${aws_security_group.webserver_elb_security_group.id}"]
+
+  listener {
+    lb_port = 80
+    lb_protocol = "http"
+    instance_port = "${var.webserver_port}"
+    instance_protocol = "http"
+
+  }
+
+  health_check {
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+    timeout = 3
+    interval = 30
+    target = "HTTP:${var.webserver_port}/"
   }
 }
