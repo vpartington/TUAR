@@ -47,12 +47,14 @@ resource "aws_launch_configuration" "webserver" {
   }
 }
 
+data "aws_availability_zones" "all" { }
+
 resource "aws_autoscaling_group" "webserver_group" {
   launch_configuration = "${aws_launch_configuration.webserver.id}"
+  availability_zones = ["${data.aws_availability_zones.all.names}"]
   min_size = 2
   max_size = 10
 
-  availability_zones = ["us-east-2a", "us-east-2b", "us-east-2c"]
   tag {
     key = "Name"
     value = "Created by vpartington with terraform"
