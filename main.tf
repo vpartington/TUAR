@@ -7,10 +7,6 @@ variable "webserver_port" {
   default = 8282
 }
 
-#output "webserver_ip" {
-#  value = "${aws_instance.webserver.public_ip}"
-#}
-
 resource "aws_security_group" "webserver_security_group" {
   name = "Created by vpartington with terraform"
 
