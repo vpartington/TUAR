@@ -8,7 +8,7 @@ variable "webserver_port" {
 }
 
 resource "aws_security_group" "webserver_security_group" {
-  name = "Created by vpartington with terraform"
+  name = "webserver_security_group created by vpartington with terraform"
 
   ingress {
     from_port = "${var.webserver_port}"
@@ -23,6 +23,8 @@ resource "aws_security_group" "webserver_security_group" {
 }
 
 resource "aws_launch_configuration" "webserver" {
+  name = "webserver created by vpartington with terraform"
+
 #  image_id = "ami-1b791862" # (ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180126 in eu-west-1, which has no default VPC)
 #  image_id = "ami-941e04f0" # (ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180126 in eu-west-2, which does not support autoscaling groups)
 #  image_id = "ami-40d28157" # (ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180126 in us-east-1, which has no default VPC)
@@ -46,6 +48,8 @@ resource "aws_launch_configuration" "webserver" {
 data "aws_availability_zones" "all" { }
 
 resource "aws_autoscaling_group" "webserver_group" {
+  name = "webserver_group created by vpartington with terraform"
+
   launch_configuration = "${aws_launch_configuration.webserver.id}"
   availability_zones = ["${data.aws_availability_zones.all.names}"]
   min_size = 2
@@ -53,7 +57,7 @@ resource "aws_autoscaling_group" "webserver_group" {
 
   tag {
     key = "Name"
-    value = "Created by vpartington with terraform"
+    value = "webserver_instance created by vpartington with terraform"
     propagate_at_launch = true
   }
 }
