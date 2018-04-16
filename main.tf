@@ -58,6 +58,7 @@ resource "aws_autoscaling_group" "webserver_group" {
   availability_zones = ["${data.aws_availability_zones.all.names}"]
   min_size = 2
   max_size = 10
+  desired_capacity = 4
   load_balancers = ["${aws_elb.webserver_elb.name}"]
   health_check_type = "ELB"
 
