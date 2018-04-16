@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+    region = "us-east-2"
+    bucket = "tuar-state-for-vpartington"
+    key = "global/s3/terraform.tfstate"
+    encrypt = "true"
+  }
+}
+
 provider "aws" {
   version = "~> 1.10"
   region = "us-east-2"
