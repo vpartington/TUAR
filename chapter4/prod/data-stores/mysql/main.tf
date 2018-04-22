@@ -7,7 +7,7 @@ terraform {
   backend "s3" {
     region = "us-east-2"
     bucket = "tuar-state-for-vpartington"
-    key = "stage/data-stores/mysql/terraform.tfstate"
+    key = "prod/data-stores/mysql/terraform.tfstate"
     encrypt = "true"
   }
 }
@@ -15,6 +15,6 @@ terraform {
 module "mysql" {
   source = "../../../modules/data-stores/mysql"
 
-  env_name = "stage"
+  env_name = "prod"
   db_password = "${var.db_password}"
 }
