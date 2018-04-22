@@ -11,16 +11,17 @@ terraform {
   backend "s3" {
     region = "us-east-2"
     bucket = "tuar-state-for-vpartington"
-    key = "stage/services/webserver-cluster/terraform.tfstate"
+    key = "prod/services/webserver-cluster/terraform.tfstate"
     encrypt = "true"
   }
 }
 
+
 module "webserver-cluster" {
   source = "../../../modules/services/webserver-cluster"
 
-  env_name = "stage"
-  instance_type = "t2.micro"
-  min_size = 2
-  max_size = 4
+  env_name = "prod"
+  instance_type = "m4.large"
+  min_size = 4
+  max_size = 10
 }
